@@ -1,48 +1,61 @@
 from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic
+from django.views import View, generic
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from .models import Choice, Question
 
 
-class IndexView(generic.ListView):
-    template_name = "polls/index.html"
-    context_object_name = "latest_question_list"
+class IndexView(View):
+    def get(self, request):
+        all_questions = Question.objects.all()
+        data_list = []
+        for obj in all_questions:
+            data_list.append(model_to_dict(obj))
 
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+        response = json.dumps(data_list, cls=DjangoJSONEncoder)
+        return HttpResponse(response, content_type='application/json')
 
+class DetailView(View):
+    def get(self, request, pk):
+        question_with_choice = get_object_or_404(Question.objects.prefetch_related('choice_set'), pk=pk)
+        choices = list(question_with_choice.choice_set.all().values('id', 'choice_text'))
 
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = "polls/detail.html"
+        question_dict = model_to_dict(question_with_choice)
+        question_dict['polls_choice'] = choices
+
+        response = json.dumps(question_dict, cls=DjangoJSONEncoder)
+        return HttpResponse(response, content_type='application/json')
+    
 
 
 class ResultsView(generic.DetailView):
-    model = Question
-    template_name = "polls/results.html"
+    def get(self, request, pk):
+        question_with_choice = get_object_or_404(Question.objects.prefetch_related('choice_set'), pk=pk)
+        choices = list(question_with_choice.choice_set.all().values('id', 'choice_text', 'votes'))
 
+        question_dict = model_to_dict(question_with_choice)
+        question_dict['polls_choice'] = choices
+
+        response = json.dumps(question_dict, cls=DjangoJSONEncoder)
+        return HttpResponse(response, content_type='application/json')
+
+@csrf_exempt
 def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(
-            request,
-            "polls/detail.html",
-            {
-                "question": question,
-                "error_message": "You didn't select a choice.",
-            },
-        )
-    else:
-        selected_choice.votes = F("votes") + 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+    if request.method == 'POST':
+        question = get_object_or_404(Question, pk=question_id)
+        try:
+            # { "choice_id": 1 }
+            data = json.loads(request.body)
+            selected_choice = question.choice_set.get(pk=data["choice_id"])
+        except (KeyError, Choice.DoesNotExist, json.JSONDecodeError):
+            return JsonResponse({"error": "Invalid choice"}, status=400)
+        else:
+            selected_choice.votes = F("votes") + 1
+            selected_choice.save()
+            return JsonResponse({"message": "voted"}, status=201)

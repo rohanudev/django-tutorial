@@ -1,0 +1,5 @@
+
+POST http://localhost:8000/polls/2/vote/
+Content-Type: application/json
+
+{ "choice_id": 4 }
