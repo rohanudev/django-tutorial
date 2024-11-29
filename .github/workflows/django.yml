@@ -22,7 +22,7 @@ jobs:
           if [ -d $HOME/django-tutorial ]; then
             # git pull을 실행한다
             cd django-tutorial
-            git pull origin master
+            git pull origin main
           else # (없으면)
             # git repository로부터 파일을 클론한다
             git clone https://github.com/gotoweb/django-tutorial/
