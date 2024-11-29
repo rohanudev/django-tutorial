@@ -17,4 +17,15 @@ jobs:
         chmod 400 ec2-private-key.pem
         ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ubuntu@ec2-3-251-87-123.eu-west-1.compute.amazonaws.com '
           date > current_time.txt
+
+          # (만일 해당 디렉토리가 있으면)
+          if [ -d $HOME/django-tutorial ]; then
+            # git pull을 실행한다
+            cd django-tutorial
+            git pull origin master
+          else # (없으면)
+            # git repository로부터 파일을 클론한다
+            git clone https://github.com/gotoweb/django-tutorial/
+            cd django-tutorial
+          fi
         '
