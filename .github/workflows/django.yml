@@ -1,0 +1,29 @@
+name: EC2 Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run Tests
+      run: |
+        echo "hello world"
+        echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
+        chmod 400 ec2-private-key.pem
+        ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ubuntu@ec2-13-125-245-20.ap-northeast-2.compute.amazonaws.com '
+          date > current_time.txt
+
+          # (만일 해당 디렉토리가 있으면)
+          if [ -d $HOME/django-tutorial ]; then
+            # git pull을 실행한다
+            cd django-tutorial
+            git pull origin main
+          else # (없으면)
+            # git repository로부터 파일을 클론한다
+            git clone https://github.com/gotoweb/django-tutorial/
+            cd django-tutorial
+          fi
+        '
