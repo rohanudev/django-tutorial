@@ -13,3 +13,5 @@ jobs:
         echo "hello world"
         echo "${{ secrets.EC2_PRIVATE_SECRET}}" > ec2-private-key.pem
         chmod 400 ec2-private-key.pem
+        ssh -i ec2-private-key.pem ubuntu@ec2-13-125-245-20.ap-northeast-2.compute.amazonaws.com 'touch test.txt'
+        
