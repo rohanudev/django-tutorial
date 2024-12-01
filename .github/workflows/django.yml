@@ -7,6 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
 
     steps:
     - uses: actions/checkout@v4
@@ -15,7 +17,7 @@ jobs:
         echo "hello world"
         echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
         chmod 400 ec2-private-key.pem
-        ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ubuntu@ec2-3-251-87-123.eu-west-1.compute.amazonaws.com '
+        ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} '
           date > current_time.txt
 
           # (만일 해당 디렉토리가 있으면)
