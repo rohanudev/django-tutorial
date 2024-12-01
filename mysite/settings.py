@@ -24,11 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-hrs^u^f38m_e5j2#d)hk*9twqn5ct=#)1xfrefm0fvheib(2hj"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# 환경변수에서 DEBUG 값을 가져오고, None일 경우 True로 설정
+DEBUG = os.getenv("DEBUG", "True").lower() in ("true")
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]']
 
-print(os.getenv("HELLO"))
+ALLOWED_HOSTS = ['*']
+
+print(os.getenv("DEBUG"))
+print(os.getenv("CORS_TRUSTED_ORIGIN"))
 
 # Application definition
 
@@ -64,6 +67,13 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+# 환경변수를 가져오고 None이 아닐 경우에만 추가
+extra_trusted_origin = os.getenv("CSRF_TRUSTED_ORIGIN")
+if extra_trusted_origin:
+    CORS_ALLOWED_ORIGINS.append(extra_trusted_origin)
+    CSRF_TRUSTED_ORIGINS.append(extra_trusted_origin)
+
 
 CORS_ALLOW_METHODS = (
     "DELETE",
