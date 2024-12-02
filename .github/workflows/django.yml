@@ -53,4 +53,6 @@ jobs:
           # 서버가 실행중이면 끄고
 
           # 서버 새로 실행
+          chmod +x django-api-server.sh
+          ./django-api-server.sh
         '
