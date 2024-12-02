@@ -38,4 +38,19 @@ jobs:
             git clone https://github.com/gotoweb/django-tutorial/
             cd django-tutorial
           fi
+
+          # 가상 환경 설정
+          rm -rf .venv # 기존에 설치된 것 있으면 지우고
+          python3 -m venv .venv
+          source .venv/bin/activate
+          
+          # 종속성 설치
+          pip3 install -r requirements.txt
+
+          # 종속성이 뭐가 설치되었을까?
+          pip3 freeze
+
+          # 서버가 실행중이면 끄고
+
+          # 서버 새로 실행
         '
