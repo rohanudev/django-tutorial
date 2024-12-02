@@ -50,5 +50,5 @@ jobs:
           # kill -15 <runserver의 PID>
 
           # 서버 새로 실행 (백그라운드로)
-          # nohup python3 manage.py runserver &
+          nohup python3 manage.py runserver > server.log 2>&1 &
         '
