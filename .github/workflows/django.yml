@@ -23,5 +23,4 @@ jobs:
         echo "hello world"
         echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
         chmod 400 ec2-private-key.pem
-        ls
         ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} "bash -s" < runserver.sh

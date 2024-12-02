@@ -1,7 +1,5 @@
 #!/bin/bash
 date > current_time.txt
-export SERVER_PID=$(ps -ef | grep runserver | awk '{ print $2 }' | head -1)
-echo $SERVER_PID
 
 # (만일 해당 디렉토리가 있으면)
 if [ -d $HOME/django-tutorial ]; then
@@ -26,7 +24,8 @@ pip3 install -r requirements.txt
 pip3 freeze
 
 # 서버가 실행중이면 끄고
-echo $SERVER_PID
+export SERVER_PID=$(ps -ef | grep runserver | awk '{ print $2 }' | head -1)
+echo "Server PID는 $SERVER_PID 번입니다. 해당 프로세스를 죽입니다..."
 kill -15 $SERVER_PID
 
 # 서버 새로 실행 (백그라운드로)
