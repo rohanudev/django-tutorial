@@ -48,6 +48,7 @@ jobs:
 
           # 서버가 실행중이면 끄고
           export SERVER_PID=$(ps -ef | grep runserver | awk '{ print $2 }' | head -1)
+          echo $SERVER_PID
           kill -15 $SERVER_PID
 
           # 서버 새로 실행 (백그라운드로)
