@@ -5,10 +5,10 @@ on:
     branches: [ "main" ]
 
 jobs:
-  pre-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - name: pre step 1
+    - name: Run Unit Tests
       run: echo "pre step 1 happens"
   deploy: # job_id
     runs-on: ubuntu-latest
@@ -16,11 +16,7 @@ jobs:
       EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
 
     steps:
-    - name: deploy Step 1
-      run: echo "step 1 happens"
-    - name: deploy Step 2
-      run: echo "step 2 happens"
-    - name: Run Tests
+    - name: Run Server
       run: |
         echo "hello world"
         echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
@@ -52,8 +48,8 @@ jobs:
 
           # 서버가 실행중이면 끄고
           # kill -15 <runserver의 PID>
-          ps -ef | grep runserver | awk \'{ print $2 }\' | head -1 | xargs kill -15
+          # ps -ef | grep runserver | awk \'{ print $2 }\' | head -1 | xargs kill -15
 
           # 서버 새로 실행 (백그라운드로)
-          nohup python3 manage.py runserver &
+          # nohup python3 manage.py runserver &
         '
