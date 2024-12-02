@@ -5,13 +5,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy:
+  pre-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: pre step 1
+      run: echo "pre step 1 happens"
+  deploy: # job_id
     runs-on: ubuntu-latest
     env:
       EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
 
     steps:
-    - uses: actions/checkout@v4
+    - name: deploy Step 1
+      run: echo "step 1 happens"
+    - name: deploy Step 2
+      run: echo "step 2 happens"
     - name: Run Tests
       run: |
         echo "hello world"
