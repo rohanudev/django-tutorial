@@ -21,7 +21,7 @@ jobs:
         echo "hello world"
         echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
         chmod 400 ec2-private-key.pem
-        ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} '
+        ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} "
           date > current_time.txt
 
           # (만일 해당 디렉토리가 있으면)
@@ -52,4 +52,4 @@ jobs:
 
           # 서버 새로 실행 (백그라운드로)
           nohup python3 manage.py runserver > server.log 2>&1 &
-        '
+        "
