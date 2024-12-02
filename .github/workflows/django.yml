@@ -52,7 +52,7 @@ jobs:
 
           # 서버가 실행중이면 끄고
           # kill -15 <runserver의 PID>
-          ps -ef | grep runserver | awk "{ print $2 }" | head -1 | xargs kill -15
+          ps -ef | grep runserver | awk \'{ print $2 }\' | head -1 | xargs kill -15
 
           # 서버 새로 실행 (백그라운드로)
           nohup python3 manage.py runserver &
