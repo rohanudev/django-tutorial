@@ -1,30 +1,30 @@
-name: EC2 deploy
+# name: EC2 deploy
 
-on:
-  workflow_run:
-    workflows: [Django CI]
-    branches: [ "main" ]
-    types:
-      - completed
+# on:
+#   workflow_run:
+#     workflows: [Django CI]
+#     branches: [ "main" ]
+#     types:
+#       - completed
 
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Run Unit Tests
-      run: echo "pre step 1 happens"
-  deploy: # job_id
-    runs-on: ubuntu-latest
-    env:
-      EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Run Unit Tests
+#       run: echo "pre step 1 happens"
+#   deploy: # job_id
+#     runs-on: ubuntu-latest
+#     env:
+#       EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
 
-    steps:
-    - name: Clone Repository
-      uses: actions/checkout@v4
-    - name: Run Server
-      run: |
-        echo "hello world"
-        echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
-        chmod 400 ec2-private-key.pem
-        ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} "bash -s" < runserver.sh
+#     steps:
+#     - name: Clone Repository
+#       uses: actions/checkout@v4
+#     - name: Run Server
+#       run: |
+#         echo "hello world"
+#         echo "${{ secrets.EC2_PRIVATE_SECRET }}" > ec2-private-key.pem
+#         chmod 400 ec2-private-key.pem
+#         ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} "bash -s" < runserver.sh
