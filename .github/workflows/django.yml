@@ -23,6 +23,8 @@ jobs:
         chmod 400 ec2-private-key.pem
         ssh -o StrictHostKeyChecking=no -i ec2-private-key.pem ${{ env.EC2_CONNECTION_STRING }} "
           date > current_time.txt
+          export SERVER_PID2=$(ps -ef | grep runserver | awk '{ print $2 }' | head -1)
+          echo $SERVER_PID2
 
           # (만일 해당 디렉토리가 있으면)
           if [ -d $HOME/django-tutorial ]; then
