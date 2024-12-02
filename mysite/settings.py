@@ -30,7 +30,7 @@ DEBUG = os.getenv("DEBUG", "True").lower() in ("true")
 
 ALLOWED_HOSTS = ['*']
 
-print(os.getenv("DEBUG"))
+print(DEBUG)
 print(os.getenv("CORS_TRUSTED_ORIGIN"))
 
 # Application definition
