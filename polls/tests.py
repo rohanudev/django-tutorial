@@ -10,7 +10,7 @@ from django.utils import timezone
 
 class QuestionModelTests(TestCase):
     def test_length(self):
-        self.assertIs(len("hello"), 6)
+        self.assertIs(len("hello"), 5)
 
     def test_was_published_recently_with_future_question(self):
         time = timezone.now() + datetime.timedelta(days=30)
