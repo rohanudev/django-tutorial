@@ -1,20 +1,33 @@
-name: EC2 Deploy
+name: Django Polls CI/CD
 
 on:
-  workflow_run:
-    workflows: [Django 유닛 테스트]
-    types:
-      - completed
+  push:
+    branches: [ "main" ]
 
 jobs:
   test:
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.12]
+
     steps:
-    - name: Run Unit Tests
-      run: echo "pre step 1 happens"
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
+  
   deploy: # job_id
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: test
     runs-on: ubuntu-latest
     env:
       EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
