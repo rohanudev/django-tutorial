@@ -1,8 +1,10 @@
-name: EC2 deploy
+name: EC2 Deploy
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: [Django 유닛 테스트]
+    types:
+      - completed
 
 jobs:
   test:
