@@ -8,11 +8,13 @@ on:
 
 jobs:
   test:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps:
     - name: Run Unit Tests
       run: echo "pre step 1 happens"
   deploy: # job_id
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       EC2_CONNECTION_STRING: ubuntu@ec2-34-250-251-235.eu-west-1.compute.amazonaws.com
